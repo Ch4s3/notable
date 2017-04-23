@@ -1,0 +1,23 @@
+<h2>Show Doc</h2>
+
+<ul>
+
+  <li>
+    <strong>Title:</strong>
+    <%= @doc.title %>
+  </li>
+
+  <li>
+    <strong>Body:</strong>
+    <%= @doc.body %>
+  </li>
+
+  <li>
+    <strong>Length:</strong>
+    <%= @doc.length %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: doc_path(@conn, :edit, @doc) %></span>
+<span><%= link "Back", to: doc_path(@conn, :index) %></span>

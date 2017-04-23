@@ -1,0 +1,6 @@
+<h2>Edit Doc</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: doc_path(@conn, :update, @doc) %>
+
+<span><%= link "Back", to: doc_path(@conn, :index) %></span>

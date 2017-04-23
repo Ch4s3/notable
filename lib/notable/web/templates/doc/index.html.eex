@@ -1,0 +1,30 @@
+<h2>Listing Docs</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Body</th>
+      <th>Length</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for doc <- @docs do %>
+    <tr>
+      <td><%= doc.title %></td>
+      <td><%= doc.body %></td>
+      <td><%= doc.length %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: doc_path(@conn, :show, doc), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: doc_path(@conn, :edit, doc), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: doc_path(@conn, :delete, doc), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Doc", to: doc_path(@conn, :new) %></span>
