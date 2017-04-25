@@ -8,14 +8,14 @@ module.exports = {
   entry: ["./stylesheets/app.scss", "./js/app.js"],
   output: {
     path: __dirname + '/../priv/static',
-    filename: 'js/app.js',
+    filename: 'js/app.js'
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /(node_modules)/,
-        loader: "babel-loader",
+        loader: "babel-loader"
       },
       {
         test: /\.(sass|scss)$/,
