@@ -15,4 +15,13 @@ defmodule Notable.Schema do
       resolve &Notable.Accounts.UserResolver.all/2
     end
   end
+
+  mutation do
+    field :documents_doc, type: :documents_doc do
+      arg :title, non_null(:string)
+      arg :body, non_null(:string)
+
+      resolve &Notable.Documents.DocResolver.create/2
+    end
+  end
 end
