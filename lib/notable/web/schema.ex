@@ -23,5 +23,14 @@ defmodule Notable.Schema do
 
       resolve &Notable.Documents.DocResolver.create/2
     end
+
+    field :documents_annotation, type: :documents_doc do
+      arg :text, non_null(:string)
+      arg :start_char, non_null(:integer)
+      arg :end_char, non_null(:integer)
+      arg :documents_docs_id, non_null(:integer)
+
+      resolve &Notable.Documents.AnnotationResolver.create/2
+    end
   end
 end

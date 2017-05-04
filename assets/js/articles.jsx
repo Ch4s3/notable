@@ -5,7 +5,6 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import DocsList from './components/docList.jsx'
 import AnnotationPopUp from './components/annotationPopUp.jsx'
-require('./apolloClientSetup.js');
 
 const networkInterface = createNetworkInterface({
   uri: '/graph',
@@ -31,7 +30,6 @@ const docsListQuery = gql`
    }
  }`;
 
-// let clientPromise = client.query({query: docsListQuery})
 
 const DocsListWithData = graphql(docsListQuery)(DocsList);
 class App extends Component {
