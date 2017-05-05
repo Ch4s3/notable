@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-
+import Document from './document.jsx'
 export default class DocsList extends React.Component {
   render() {
     const { data: { loading, error, documentsDocs } } = this.props;
@@ -11,7 +11,7 @@ export default class DocsList extends React.Component {
      return <p>{error.message}</p>;
     }
     return <ul>
-     { documentsDocs.map( doc => <li key={doc.id}><div data-doc-id={doc.id}><h4>{doc.title}</h4><p>{doc.body}</p></div></li>) };
+     { documentsDocs.map( doc => <div key={doc.id}> <Document document={doc}/> </div>) };
     </ul>;
   }
 }

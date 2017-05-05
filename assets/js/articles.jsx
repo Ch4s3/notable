@@ -26,6 +26,9 @@ const docsListQuery = gql`
     body
     annotations {
       id
+      text
+      startChar
+      endChar
     }
    }
  }`;

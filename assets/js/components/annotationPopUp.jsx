@@ -44,7 +44,7 @@ export default class AnnotationPopUp extends React.Component {
       const text = (document.all) ? document.selection.createRange().text : document.getSelection();
       const startChar = document.getSelection().anchorOffset - 1
       const endChar = document.getSelection().extentOffset - 1
-      if(docID && text.toString() !== '') {
+      if(e.target.tagName === 'P' && docID && text.toString() !== '') {
         _this.setState({
           popUpData: {
             xPos: x, yPos: y,
