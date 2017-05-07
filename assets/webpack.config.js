@@ -32,10 +32,10 @@ module.exports = {
       debug: false
     }),
     new ExtractTextPlugin({
-    filename: (getPath) => {
-      return getPath('css/app.css').replace('js/css', 'css');
-    },
-    allChunks: true
-    })
+      filename: (getPath) => {
+        return getPath('css/app.css').replace('js/css', 'css');
+      },
+      allChunks: true
+    }),
   ],
 }

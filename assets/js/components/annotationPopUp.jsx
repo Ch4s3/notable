@@ -38,13 +38,19 @@ export default class AnnotationPopUp extends React.Component {
   render() {
     const _this = this;
     function gText(e) {
-      const x = e.offsetX + 16
-      const y = e.clientY + 8
-      const docID = e.target.parentElement.getAttribute('data-doc-id')
+      const x = e.offsetX + 16;
+      const y = e.clientY + 8;
+      const docID = e.target.parentElement.getAttribute('data-doc-id');
       const text = (document.all) ? document.selection.createRange().text : document.getSelection();
+      let show;
+      if(text.baseNode.parentElement.tagName === 'MARK'){
+        show = false;
+      } else {
+        show = true;
+      }
       const startChar = document.getSelection().anchorOffset - 1
       const endChar = document.getSelection().extentOffset - 1
-      if(e.target.tagName === 'P' && docID && text.toString() !== '') {
+      if(show === true && e.target.tagName === 'P' && docID && text.toString() !== '') {
         _this.setState({
           popUpData: {
             xPos: x, yPos: y,
