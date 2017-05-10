@@ -5,13 +5,13 @@ export default class DocsList extends React.Component {
   render() {
     const { data: { loading, error, documentsDocs } } = this.props;
     if (loading) {
-     return <p>Loading ...</p>;
+     return <p>Loading ...</p>
     }
     if (error) {
-     return <p>{error.message}</p>;
+     return <p>{error.message}</p>
     }
     return <ul>
-     { documentsDocs.map( doc => <div key={doc.id}> <Document document={doc}/> </div>) };
-    </ul>;
+     { documentsDocs.map( doc => <div key={doc.id}> <Document document={doc}/> </div>) }
+    </ul>
   }
 }

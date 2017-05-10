@@ -28,7 +28,7 @@ export default class AnnotationPopUp extends React.Component {
   }
 
   noPopup(props) {
-    return <div></div>;
+    return <div></div>
   }
 
   handleCloseClick() {
@@ -40,17 +40,20 @@ export default class AnnotationPopUp extends React.Component {
     function gText(e) {
       const x = e.offsetX + 16;
       const y = e.clientY + 8;
-      const docID = e.target.parentElement.getAttribute('data-doc-id');
+      const docID = e.target.closest("div").getAttribute('data-doc-id');
       const text = (document.all) ? document.selection.createRange().text : document.getSelection();
-      let show;
-      if(text.baseNode.parentElement.tagName === 'MARK'){
-        show = false;
+      const focusNode = document.getSelection().focusNode;
+      const tagName = e.target.tagName; //TODO theres a bug here on rare occasions where the popup doesn't happen 1 char before a <mark> b/c target
+      let overlap;
+      if(focusNode && focusNode.parentElement.nodeName === 'MARK'){
+        overlap = true;
       } else {
-        show = true;
+        overlap = false;
       }
-      const startChar = document.getSelection().anchorOffset - 1
-      const endChar = document.getSelection().extentOffset - 1
-      if(show === true && e.target.tagName === 'P' && docID && text.toString() !== '') {
+      const startChar = document.getSelection().anchorOffset;
+      const endChar = document.getSelection().extentOffset - 1;
+      const pOrSpan = (tagName === 'SPAN' || tagName === 'P');
+      if(overlap === false && pOrSpan && docID && text.toString() !== '') {
         _this.setState({
           popUpData: {
             xPos: x, yPos: y,
@@ -65,9 +68,9 @@ export default class AnnotationPopUp extends React.Component {
     if (!document.all) document.captureEvents(Event.MOUSEUP);
     let popUp
     if(this.state.popUpData.docID){
-      popUp = this.showPopup({popUpData: this.state.popUpData, onClick: this.handleCloseClick})
+      popUp = this.showPopup({popUpData: this.state.popUpData, onClick: this.handleCloseClick});
     } else {
-      popUp = this.noPopup()
+      popUp = this.noPopup();
     }
     return(
       <div>{popUp}</div>

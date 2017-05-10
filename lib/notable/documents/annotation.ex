@@ -1,6 +1,8 @@
 defmodule Notable.Documents.Annotation do
   use Ecto.Schema
-  import Ecto.Changeset
+  import Ecto.{Changeset, Query}
+  alias Notable.Repo
+  alias Notable.Documents.Annotation
 
   schema "documents_annotations" do
     field :text, :string
@@ -12,9 +14,46 @@ defmodule Notable.Documents.Annotation do
     timestamps()
   end
 
-  def changeset(doc, params \\ %{}) do
-    doc
+  def changeset(annotation, params \\ %{}) do
+    annotation
     |> cast(params, [:text, :start_char, :end_char, :documents_docs_id])
     |> validate_required([:text, :start_char, :end_char, :documents_docs_id])
+    |> validate_overlap
+  end
+
+  def validate_overlap(changeset) do
+    range =
+      get_field(changeset, :start_char)..get_field(changeset, :end_char)
+      |> Enum.to_list
+    valid? =
+      get_field(changeset, :documents_docs_id)
+      |> get_siblings
+      |> get_start_to_end_range
+      |> check_disjoint_sets(range)
+
+    case valid? do
+      true ->
+        changeset
+      false ->
+        add_error(changeset, :start_char, "May not overlap another Annotation")
+    end
+
+  end
+
+  def get_siblings(doc_id) do
+    query = from a in Annotation, where: a.documents_docs_id == type(^doc_id, :integer)
+    Repo.all(query)
+  end
+
+  def check_disjoint_sets(sibling_range_lists, changeset_range_list) do
+    change_map_set = MapSet.new(changeset_range_list)
+    Enum.map(sibling_range_lists, fn (rl) ->
+      MapSet.disjoint?(MapSet.new(rl), change_map_set)
+    end)
+    |> Enum.reduce(true, fn(bool, acc) -> bool && acc end)
+  end
+
+  def get_start_to_end_range(annotations) do
+    Enum.map(annotations, fn (a) -> Enum.to_list(a.start_char..a.end_char) end)
   end
 end
