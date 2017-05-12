@@ -24,9 +24,11 @@ defmodule Notable.Schema.Types do
   @desc "An annotation"
   object :documents_annotation do
     field :id, :id
+    @desc "text describing a portion of the parent docs text"
     field :text, :string
     @desc "start position within the parent doc"
     field :start_char, :integer
+    @desc "end position within the parent doc"
     field :end_char, :integer
 
     field :user, :accounts_user, resolve: assoc(:accounts_users)

@@ -9,6 +9,7 @@ export default class AnnotationPopUp extends React.Component {
       popUpData: {},
     };
     this.handleCloseClick = this.handleCloseClick.bind(this);
+    this.gText = this.gText.bind(this)
   };
 
   showPopup(props) {
@@ -35,36 +36,37 @@ export default class AnnotationPopUp extends React.Component {
     this.setState({popUpData: {}});
   }
 
-  render() {
-    const _this = this;
-    function gText(e) {
-      const x = e.offsetX + 16;
-      const y = e.clientY + 8;
-      const docID = e.target.closest("div").getAttribute('data-doc-id');
-      const text = (document.all) ? document.selection.createRange().text : document.getSelection();
-      const focusNode = document.getSelection().focusNode;
-      const tagName = e.target.tagName; //TODO theres a bug here on rare occasions where the popup doesn't happen 1 char before a <mark> b/c target
-      let overlap;
-      if(focusNode && focusNode.parentElement.nodeName === 'MARK'){
-        overlap = true;
-      } else {
-        overlap = false;
-      }
-      const startChar = document.getSelection().anchorOffset;
-      const endChar = document.getSelection().extentOffset - 1;
-      const pOrSpan = (tagName === 'SPAN' || tagName === 'P');
-      if(overlap === false && pOrSpan && docID && text.toString() !== '') {
-        _this.setState({
-          popUpData: {
-            xPos: x, yPos: y,
-            docID: docID,
-            startChar: startChar, endChar: endChar,
-            selectedText: text.toString()
-          }
-        })
-      }
+  gText(e) {
+
+    const x = e.offsetX + 16;
+    const y = e.layerY;
+    const docID = e.target.closest("div").getAttribute('data-doc-id');
+    const text = (document.all) ? document.selection.createRange().text : document.getSelection();
+    const focusNode = document.getSelection().focusNode;
+    const tagName = e.target.tagName; //TODO theres a bug here on rare occasions where the popup doesn't happen 1 char before a <mark> b/c target
+    let overlap;
+    if(focusNode && focusNode.parentElement.nodeName === 'MARK'){
+      overlap = true;
+    } else {
+      overlap = false;
     }
-    document.onmouseup = gText;
+    const startChar = document.getSelection().anchorOffset;
+    const endChar = document.getSelection().extentOffset - 1;
+    const pOrSpan = (tagName === 'SPAN' || tagName === 'P');
+    if(overlap === false && pOrSpan && docID && text.toString() !== '') {
+      this.setState({
+        popUpData: {
+          xPos: x, yPos: y,
+          docID: docID,
+          startChar: startChar, endChar: endChar,
+          selectedText: text.toString()
+        }
+      })
+    }
+  }
+
+  render() {
+    document.onmouseup = this.gText;
     if (!document.all) document.captureEvents(Event.MOUSEUP);
     let popUp
     if(this.state.popUpData.docID){

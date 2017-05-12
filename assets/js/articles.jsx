@@ -5,7 +5,7 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import DocsList from './components/docList.jsx'
 import AnnotationPopUp from './components/annotationPopUp.jsx'
-
+import AnnotationBar from './components/annotationBar.jsx'
 const networkInterface = createNetworkInterface({
   uri: '/graph',
   opts: {
@@ -33,20 +33,51 @@ const docsListQuery = gql`
    }
  }`;
 
+const DocsListWithData = graphql(docsListQuery, {
+  options: { fetchPolicy: 'network-only' }
+})(DocsList);
 
-const DocsListWithData = graphql(docsListQuery)(DocsList);
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showAnnotation: false,
+      annotationId: 1
+    };
+    this.handleAnnotationCloseClick = this.handleAnnotationCloseClick.bind(this);
+    this.clickAnnotationHighlight = this.clickAnnotationHighlight.bind(this);
+  };
+
+  handleAnnotationCloseClick() {
+    this.setState({showAnnotation: false});
+  }
+  clickAnnotationHighlight(id){
+    if(id){
+      this.setState({annotationId: id, showAnnotation: true});
+    }
+  }
 
   render() {
     return (
-      <div className="App">
+      <div className="App container">
         <div className="App-header">
           <h2>Articles</h2>
         </div>
-        <ApolloProvider client={client}>
-          <DocsListWithData />
-        </ApolloProvider>
-        <AnnotationPopUp/>
+        <div className="row">
+          <div className="column column-50">
+            <ApolloProvider client={client}>
+              <DocsListWithData
+                clickAnnotationHighlight={this.clickAnnotationHighlight}
+              />
+            </ApolloProvider>
+          </div>
+          <AnnotationBar
+            showAnnotation={this.state.showAnnotation}
+            annotationId={this.state.annotationId}
+            handleAnnotationCloseClick={this.handleAnnotationCloseClick}
+          />
+          <AnnotationPopUp />
+        </div>
       </div>
     );
   }

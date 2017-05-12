@@ -11,6 +11,11 @@ defmodule Notable.Schema do
       resolve &Notable.Documents.AnnotationResolver.all/2
     end
 
+    field :documents_annotation, type: :documents_annotation do
+      arg :id, non_null(:id)
+      resolve &Notable.Documents.AnnotationResolver.one/2
+    end
+
     field :accounts_users, list_of(:accounts_user) do
       resolve &Notable.Accounts.UserResolver.all/2
     end
@@ -24,7 +29,7 @@ defmodule Notable.Schema do
       resolve &Notable.Documents.DocResolver.create/2
     end
 
-    field :documents_annotation, type: :documents_doc do
+    field :documents_annotation, type: :documents_annotation do
       arg :text, non_null(:string)
       arg :start_char, non_null(:integer)
       arg :end_char, non_null(:integer)

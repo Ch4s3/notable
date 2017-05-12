@@ -2,8 +2,6 @@ alias Notable.Repo
 alias Notable.Accounts.User
 alias Notable.Documents.{Doc, Annotation}
 
-# Create 10 seed users
-
 for _ <- 1..10 do
   Repo.insert!(%User{
     name: Faker.Name.name,
@@ -12,21 +10,33 @@ for _ <- 1..10 do
 end
 
 
-for _ <- 1..40 do
-  Repo.insert!(%Doc{
-    title: Faker.Lorem.sentence,
-    body: Faker.Lorem.sentences(%Range{first: 1, last: 15}) |> Enum.join("\n\n"),
-    accounts_users_id: Enum.random(1..10)
-  })
-end
+for _ <- 1..15 do
+  body = Faker.Lorem.paragraphs(%Range{first: 1, last: 20}) |> Enum.join("\n\n")
+  length = String.length(body)
+  doc =
+    Repo.insert!(%Doc{
+      title: Faker.Lorem.sentence,
+      body: body,
+      accounts_users_id: Enum.random(1..10)
+    })
 
-for _ <- 1..80 do
-  text = Faker.Lorem.sentences(%Range{first: 1, last: 2}) |> Enum.join("\n\n")
-  Repo.insert!(%Annotation{
-    text: text,
-    start_char: Enum.random(1..10),
-    end_char: Enum.random(10..String.length(text)),
-    accounts_users_id: Enum.random(1..10),
-    documents_docs_id: Enum.random(1..40)
-  })
+  chunks = div(length, 200)
+  Enum.map(Enum.to_list(1..chunks), fn(x) ->
+    text = Faker.Lorem.sentences(%Range{first: 1, last: 5}) |> Enum.join("\n\n")
+    chunk_start =
+      case x do
+        0 ->
+          0
+        _ ->
+          x * 200
+      end
+    start = Enum.random(chunk_start..(chunk_start+10))
+    Repo.insert!(%Annotation{
+      text: text,
+      start_char: start,
+      end_char: Enum.random((start + 10)..(chunk_start + 200)),
+      accounts_users_id: Enum.random(1..10),
+      documents_docs_id: doc.id
+    })
+  end)
 end

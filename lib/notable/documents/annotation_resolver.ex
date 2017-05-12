@@ -1,8 +1,14 @@
 defmodule Notable.Documents.AnnotationResolver do
   alias Notable.{Documents.Annotation, Repo}
+  import Ecto.Query
 
   def all(_args, _info) do
-    {:ok, Repo.all(Annotation)}
+    {:ok, Repo.all(from a in Annotation, order_by: a.start_char)}
+  end
+
+  def one(args, _info) do
+    id = String.to_integer(args.id)
+    {:ok, Repo.one(from a in Annotation, where: a.id == ^id)}
   end
 
   def create(args, _info) do
